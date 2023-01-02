@@ -2,13 +2,43 @@
 #include <fstream>
 #include <Windows.h>
 #include <vector>
-#include <stack>
+#include <cmath>
 using namespace std;
 
 string comp(string tmp){
     vector<string> arr(3);
     int j = 0;
     int start = -1, length = 0;
+    for(int i=0; i<tmp.size()-3; i++){
+        if(tmp.size() - i < 3) break;
+        if(tmp.substr(i, 3)=="cos"){
+            int j = i+3;
+            length = 3;
+            while(('0' <= tmp[j] && tmp[j] <= '9') || (tmp[j] == '-' && arr[0].empty())){
+                length++;
+                arr[0]+=tmp[j];
+                j++;
+            }
+            tmp.replace(i, length, to_string((int)(cos(stoi(arr[0])))));
+            i = -1;
+            length = 0;
+            arr[0] = "";
+            continue;
+        }
+        if(tmp.substr(i, 3)=="sin"){
+            int j = i+3;
+            length = 3;
+            while(('0' <= tmp[j] && tmp[j] <= '9') || (tmp[j] == '-' && arr[0].empty())){
+                length++;
+                arr[0]+=tmp[j];
+                j++;
+            }
+            tmp.replace(i, length, to_string((int)(sin(stoi(arr[0])))));
+            i = -1;
+            length = 0;
+            arr[0] = "";
+        }
+    }
     for(int i= 0; i < tmp.size(); i++){
         if(('0' <= tmp[i] && tmp[i] <= '9') || (tmp[i] == '-' && arr[j].empty())){
             if(j==0 && start == -1) start = i;
@@ -53,6 +83,9 @@ string comp(string tmp){
     arr[0]="";
     arr[1]="";
     arr[2]="";
+    j=0;
+    start =-1;
+    length = 0;
     for(int i= 0; i < tmp.size(); i++){
         if(('0' <= tmp[i] && tmp[i] <= '9') || (tmp[i] == '-' && arr[j].empty())){
             if(j==0 && start == -1) start = i;
